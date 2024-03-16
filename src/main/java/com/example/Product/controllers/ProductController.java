@@ -1,5 +1,6 @@
 package com.example.Product.controllers;
 
+import com.example.Product.dtos.ErrorResponseDto;
 import com.example.Product.dtos.ProductRequestDto;
 import com.example.Product.dtos.ProductWrapper;
 import com.example.Product.models.Product;
@@ -26,19 +27,15 @@ public class ProductController
         return productService.getAllProducts();
     }
     @GetMapping("/products/{id}")
-    public ResponseEntity<ProductWrapper> getSingleProduct(@PathVariable("id") Long id)
+    public ResponseEntity<ProductWrapper> getSingleProduct(@PathVariable("id") Long id) throws InvalidProductIdException
     {
         ResponseEntity<ProductWrapper> response;
-        try {
-            Product singleProduct = productService.getSingleProduct(id);
-            ProductWrapper productWrapper = new ProductWrapper(singleProduct,"Successfully retrived the dat");
-            response = new ResponseEntity<>(productWrapper, HttpStatus.OK);
-        } catch (InvalidProductIdException e) {
-            ProductWrapper productWrapper = new ProductWrapper(null,"Product is not present");
-            response = new ResponseEntity<>(productWrapper,HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        Product singleProduct = productService.getSingleProduct(id);
+        ProductWrapper productWrapper = new ProductWrapper(singleProduct,"Successfully retrived the dat");
+        response = new ResponseEntity<>(productWrapper, HttpStatus.OK);
         return response;
     }
+
     @PostMapping("/products")
     public Product addProduct(@RequestBody ProductRequestDto productRequestDto)
     {
