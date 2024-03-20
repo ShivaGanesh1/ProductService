@@ -2,6 +2,7 @@ package com.example.Product.services;
 
 import com.example.Product.dtos.ProductRequestDto;
 import com.example.Product.dtos.ProductResponseDto;
+import com.example.Product.exceptions.InvalidProductIdException;
 import com.example.Product.models.Category;
 import com.example.Product.models.Product;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,8 +61,13 @@ public class FakeStoreProductService implements IProductService{
     }
 
     @Override
-    public Product updateProduct(Long id, ProductRequestDto productRequestDto) {
-        RequestCallback requestCallback = restTemplate.httpEntityCallback(productRequestDto,ProductResponseDto.class);
+    public Product addProduct(Product product) {
+        return null;
+    }
+
+    @Override
+    public Product updateProduct(Long id, Product product) {
+        RequestCallback requestCallback = restTemplate.httpEntityCallback(product,ProductResponseDto.class);
         HttpMessageConverterExtractor<ProductResponseDto> responseExtractor =
                 new HttpMessageConverterExtractor<>(ProductResponseDto.class, restTemplate.getMessageConverters());
         ProductResponseDto productResponseDto =

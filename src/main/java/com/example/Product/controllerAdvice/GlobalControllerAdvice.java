@@ -1,11 +1,10 @@
 package com.example.Product.controllerAdvice;
 
 import com.example.Product.dtos.ErrorResponseDto;
-import com.example.Product.services.InvalidProductIdException;
+import com.example.Product.exceptions.InvalidProductIdException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice

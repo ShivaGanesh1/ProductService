@@ -1,12 +1,14 @@
 package com.example.Product.controllers;
 
-import com.example.Product.dtos.ErrorResponseDto;
 import com.example.Product.dtos.ProductRequestDto;
 import com.example.Product.dtos.ProductWrapper;
+import com.example.Product.exceptions.InvalidProductIdException;
+import com.example.Product.exceptions.ProductDoesNotFoundException;
+import com.example.Product.models.Category;
 import com.example.Product.models.Product;
 import com.example.Product.services.IProductService;
-import com.example.Product.services.InvalidProductIdException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +20,8 @@ public class ProductController
 {
     @Autowired
     private IProductService productService;
+
+
     // get all the products
     @GetMapping("/products")
 
@@ -39,13 +43,30 @@ public class ProductController
     @PostMapping("/products")
     public Product addProduct(@RequestBody ProductRequestDto productRequestDto)
     {
-        return new Product();
+        Product product = new Product();
+        product.setName(productRequestDto.getTitle());
+        product.setDescription(productRequestDto.getDescription());
+        product.setPrice(productRequestDto.getPrice());
+        product.setImage(productRequestDto.getImage());
+        product.setCategory(new Category());
+        product.getCategory().setName(productRequestDto.getCategory());
+        Product saveProduct = productService.addProduct(product);
+
+        return saveProduct;
     }
     @PutMapping("/products/{id}")
     public Product updateProduct(@PathVariable("id") Long id,
-                                 @RequestBody ProductRequestDto productRequestDto)
+                                 @RequestBody ProductRequestDto productRequestDto) throws ProductDoesNotFoundException
     {
-        return productService.updateProduct(id,productRequestDto);
+        Product product = new Product();
+        product.setId(id);
+        product.setName(productRequestDto.getTitle());
+        product.setDescription(productRequestDto.getDescription());
+        product.setPrice(productRequestDto.getPrice());
+        product.setImage(productRequestDto.getImage());
+        product.setCategory(new Category());
+        product.getCategory().setName(productRequestDto.getCategory());
+        return productService.updateProduct(id,product);
     }
     @DeleteMapping("/products/{id}")
     public boolean deleteProduct(@PathVariable("id") Long id)
